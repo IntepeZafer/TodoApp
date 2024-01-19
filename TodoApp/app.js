@@ -23,11 +23,11 @@
                         </div>
 
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-xmark"></i> Sil</a></li>
+                                <li><a onclick="deleteTask(${gorev.id})" class="dropdown-item" href="#"><i class="fa-solid fa-xmark"></i> Sil</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fa-solid fa-plus"></i> Ekle</a></li>
                             </ul>
                         </div>
@@ -43,8 +43,15 @@
             }else{
                 gorevListesi.push({"id": gorevListesi.length + 1, "gorevAdi": txtTaskName.value});
                 txtTaskName.value = "";
-            displayText();
+                displayText();
             }
             e.preventDefault();
         }
         btnAddNewTask.addEventListener("click" , newTask);
+        
+        function deleteTask(id){
+            let deleteIndex;
+            deleteIndex = gorevListesi.findIndex(gorev => gorev.id == id);
+            gorevListesi.splice(deleteIndex , 1);
+            displayText();
+        }
