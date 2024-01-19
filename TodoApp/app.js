@@ -4,6 +4,8 @@
         let ul = document.querySelector("#task-list");
         let txtTaskName = document.querySelector("#txtTaskName");
         let btnAddNewTask = document.querySelector("#btnAddNewTask");
+        let editId;
+        let isEditTask = false;
 
         let gorevListesi = [
             {"id": 1, "gorevAdi": "Görev 1"},
@@ -28,7 +30,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a onclick="deleteTask(${gorev.id})" class="dropdown-item" href="#"><i class="fa-solid fa-xmark"></i> Sil</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fa-solid fa-plus"></i> Ekle</a></li>
+                                <li><a onclick='editTask(${gorev.id} , "${gorev.gorevAdi}")' class="dropdown-item" href="#"><i class="fa-solid fa-plus"></i> Ekle</a></li>
                             </ul>
                         </div>
                     </li>
@@ -41,10 +43,19 @@
             if(txtTaskName.value === ""){
                 alert("Boş Değer Girilemez");
             }else{
-                gorevListesi.push({"id": gorevListesi.length + 1, "gorevAdi": txtTaskName.value});
-                txtTaskName.value = "";
-                displayText();
+                if(!isEditTask){
+                    gorevListesi.push({"id": gorevListesi.length + 1, "gorevAdi": txtTaskName.value});
+                    txtTaskName.value = "";
+                }else{
+                    for(let gorev of gorevListesi){
+                        if(gorev.id == editId){
+                            gorev.gorevAdi = txtTaskName.value;
+                        }
+                        isEditTask = false;
+                    }
+                }
             }
+            displayText();
             e.preventDefault();
         }
         btnAddNewTask.addEventListener("click" , newTask);
@@ -54,4 +65,12 @@
             deleteIndex = gorevListesi.findIndex(gorev => gorev.id == id);
             gorevListesi.splice(deleteIndex , 1);
             displayText();
+        }
+        function editTask(taskId , taskName){
+            editId = taskId;
+            isEditTask = true;
+            txtTaskName.value = taskName;
+            txtTaskName.focus();
+            txtTaskName.classList.add("active");
+
         }
