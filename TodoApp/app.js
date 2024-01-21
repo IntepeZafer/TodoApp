@@ -5,6 +5,7 @@
         let btnAddNewTask = document.querySelector("#btnAddNewTask");
         let btnClear = document.querySelector("#btnClear");
         let inputTag = document.querySelector("input");
+        let filters = document.querySelectorAll(".filters span");
         let editId;
         let isEditTask = false;
 
@@ -14,15 +15,16 @@
             {"id": 3, "gorevAdi": "Görev 3" , "durum" : "pending"},
             {"id": 4, "gorevAdi": "Görev 4" , "durum" : "pending"},
         ];
-        displayText();
-        function displayText(){
+        displayText("all");
+        function displayText(filters){
             ul.innerHTML = "";
             if(gorevListesi.length == 0){
                 ul.innerHTML = "<p class = 'p-3'>Tüm Görevler Silindi</p>"
             }else{
                 for(let gorev of gorevListesi) {
                     let complated = gorev.durum == "complated" ? "checked" : "";
-                    let li = `
+                    if(gorev.durum == filters || filters == "all"){
+                        let li = `
                         <li class="task list-group-item">
                             <div class="form-check">
                                 <input type="checkbox" onclick="updateStatus(this)" id="${gorev.id}" class="form-check-input" ${complated}>
@@ -40,7 +42,9 @@
                             </div>
                         </li>
                     `;
-                    ul.insertAdjacentHTML("beforeend", li);           
+                    ul.insertAdjacentHTML("beforeend", li);
+                    }
+                               
                 };
             }
         };
@@ -61,7 +65,7 @@
                     }
                 }
             }
-            displayText();
+            displayText(document.querySelector("span.active").id);
             e.preventDefault();
         }
         btnAddNewTask.addEventListener("click" , newTask);
@@ -70,7 +74,7 @@
             let deleteIndex;
             deleteIndex = gorevListesi.findIndex(gorev => gorev.id == id);
             gorevListesi.splice(deleteIndex , 1);
-            displayText();
+            displayText(document.querySelector("span.active").id);
         }
         function editTask(taskId , taskName){
             editId = taskId;
@@ -105,4 +109,11 @@
                     gorev.durum = durum;
                 }
             }
+        }
+        for(let span of filters){
+            span.addEventListener("click" , () => {
+                document.querySelector("span.active").classList.remove("active");
+                span.classList.add("active");
+                displayText(span.id);
+            })
         }
