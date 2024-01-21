@@ -110,6 +110,8 @@
                     gorev.durum = durum;
                 }
             }
+            displayText(document.querySelector("span.active").id)
+            localStorage.setItem("gorevListesi" , JSON.stringify(gorevListesi));
         }
         for(let span of filters){
             span.addEventListener("click" , () => {
