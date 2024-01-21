@@ -9,12 +9,10 @@
         let editId;
         let isEditTask = false;
 
-        let gorevListesi = [
-            {"id": 1, "gorevAdi": "Görev 1" , "durum" : "pending"},
-            {"id": 2, "gorevAdi": "Görev 2" , "durum" : "pending"},
-            {"id": 3, "gorevAdi": "Görev 3" , "durum" : "pending"},
-            {"id": 4, "gorevAdi": "Görev 4" , "durum" : "pending"},
-        ];
+        let gorevListesi = [];
+        if(localStorage.getItem("gorevListesi") != null){
+            gorevListesi = JSON.parse(localStorage.getItem("gorevListesi"));
+        }
         displayText("all");
         function displayText(filters){
             ul.innerHTML = "";
@@ -54,7 +52,7 @@
                 alert("Boş Değer Girilemez");
             }else{
                 if(!isEditTask){
-                    gorevListesi.push({"id": gorevListesi.length + 1, "gorevAdi": txtTaskName.value});
+                    gorevListesi.push({"id": gorevListesi.length + 1, "gorevAdi": txtTaskName.value , "durum" : "pending"});
                     txtTaskName.value = "";
                 }else{
                     for(let gorev of gorevListesi){
@@ -66,6 +64,7 @@
                 }
             }
             displayText(document.querySelector("span.active").id);
+            localStorage.setItem("gorevListesi" , JSON.stringify(gorevListesi));
             e.preventDefault();
         }
         btnAddNewTask.addEventListener("click" , newTask);
@@ -75,6 +74,7 @@
             deleteIndex = gorevListesi.findIndex(gorev => gorev.id == id);
             gorevListesi.splice(deleteIndex , 1);
             displayText(document.querySelector("span.active").id);
+            localStorage.setItem("gorevListesi" , JSON.stringify(gorevListesi));
         }
         function editTask(taskId , taskName){
             editId = taskId;
@@ -89,6 +89,7 @@
             let confrim = confirm("Tüm Görevleri Silmek İstediğinizden Emin Misiniz");
             if(confrim){
                 gorevListesi.splice(0 , gorevListesi.length);
+                localStorage.setItem("gorevListesi" , JSON.stringify(gorevListesi));
                 displayText();
             }else{
 
@@ -116,4 +117,5 @@
                 span.classList.add("active");
                 displayText(span.id);
             })
+            localStorage.setItem("gorevListesi" , JSON.stringify(gorevListesi));
         }
